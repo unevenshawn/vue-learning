@@ -1,32 +1,92 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <router-view></router-view>
+    <button @click="toHome()">test</button>
+    <tabbar>
+        <tabbaritem >
+          <img slot="item-icon" src="./assets/img/tabbar/home.svg" alt="" />
+          <img
+            slot="item-icon-active"
+            src="./assets/img/tabbar/home_fill.svg"
+            alt=""
+          />
+          <div slot="item-text">首页</div>
+        </tabbaritem>
+      
+      
+        <tabbaritem>
+          <img slot="item-icon" src="./assets/img/tabbar/category.svg" alt="" />
+          <img
+            slot="item-icon-active"
+            src="./assets/img/tabbar/category_fill.svg"
+            alt=""
+          />
+          <div slot="item-text">分类</div>
+        </tabbaritem>
+      
+      
+        <tabbaritem>
+          <img slot="item-icon" src="./assets/img/tabbar/shopcart.svg" alt="" />
+          <img
+            slot="item-icon-active"
+            src="./assets/img/tabbar/shopcart_fill.svg"
+            alt=""
+          />
+          <div slot="item-text">购物车</div>
+        </tabbaritem>
+      
+      
+        <tabbaritem>
+          <img slot="item-icon" src="./assets/img/tabbar/user.svg" alt="" />
+          <img
+            slot="item-icon-active"
+            src="./assets/img/tabbar/user_fill.svg"
+            alt=""
+          />
+          <div slot="item-text">用户</div>
+        </tabbaritem>
+      
+    </tabbar>
   </div>
 </template>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+button {
+  border: none;
+  flex: 1;
   text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+  height: 49px;
+  /* tabbar常用高度49 */
+  font-size: 10px;
 }
 </style>
+<script>
+import Tabbar from "./components/tabbar/Tabbar.vue";
+import Tabbaritem from "./components/tabbar/TabbarItem.vue";
+
+
+export default {
+  name: "App",
+  components: {
+    Tabbar,
+    Tabbaritem,
+  },
+  methods: {
+    toHome(){
+      this.$router.push("/home")
+      console.log(this.$route);
+
+    },
+    toShopCart(){
+      this.$router.push("/shopcart")
+    },
+    toUser(){
+      this.$router.push("/user")
+    },
+    toCategory(){
+      this.$router.push("/category")
+    }
+
+  },
+};
+</script>
