@@ -30,6 +30,9 @@
 <script>
 export default {
   name: "TabbarItem",
+  props:{//这儿用props，是自己属性传给自己
+    path:String
+  },
   data() {
     return {
       isActive: false,
@@ -37,9 +40,11 @@ export default {
   },
   methods: {
     routeTo() {
-      console.log(this.$route);
-      this.$router.push("/")
-    },
+     this.isActive=!this.isActive
+      
+       if(this.$route.path!=this.path){ 
+       this.$router.push(this.path)}
+     },
   },
 };
 </script>

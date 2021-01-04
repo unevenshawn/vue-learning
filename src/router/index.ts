@@ -4,6 +4,8 @@ import VueRouter, { RouteConfig } from 'vue-router'
 
 Vue.use(VueRouter)
 
+
+
 const routes: Array<RouteConfig> = [
  {
    path:"/",
@@ -38,8 +40,13 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to,from,next)=>{
-  console.log("rerouted by routers");
+  //如何获取到路由对应的组件？
+  console.log(router);
+  
   next()
 })
+
+
+
 
 export default router

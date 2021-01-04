@@ -1,9 +1,8 @@
 <template>
   <div id="app">
     <router-view></router-view>
-    <button @click="toHome()">test</button>
     <tabbar>
-        <tabbaritem >
+        <tabbaritem path="/home">
           <img slot="item-icon" src="./assets/img/tabbar/home.svg" alt="" />
           <img
             slot="item-icon-active"
@@ -14,7 +13,7 @@
         </tabbaritem>
       
       
-        <tabbaritem>
+        <tabbaritem  path="/category">
           <img slot="item-icon" src="./assets/img/tabbar/category.svg" alt="" />
           <img
             slot="item-icon-active"
@@ -25,7 +24,7 @@
         </tabbaritem>
       
       
-        <tabbaritem>
+        <tabbaritem  path="/shopcart">
           <img slot="item-icon" src="./assets/img/tabbar/shopcart.svg" alt="" />
           <img
             slot="item-icon-active"
@@ -36,7 +35,7 @@
         </tabbaritem>
       
       
-        <tabbaritem>
+        <tabbaritem  path="/user">
           <img slot="item-icon" src="./assets/img/tabbar/user.svg" alt="" />
           <img
             slot="item-icon-active"
@@ -72,20 +71,7 @@ export default {
     Tabbaritem,
   },
   methods: {
-    toHome(){
-      this.$router.push("/home")
-      console.log(this.$route);
-
-    },
-    toShopCart(){
-      this.$router.push("/shopcart")
-    },
-    toUser(){
-      this.$router.push("/user")
-    },
-    toCategory(){
-      this.$router.push("/category")
-    }
+   
 
   },
 };
