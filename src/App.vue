@@ -3,7 +3,7 @@
     <router-view></router-view>
     <tabbar>
         <tabbaritem path="/home">
-          <img slot="item-icon" src="./assets/img/tabbar/home.svg" alt="" />
+          <img slot="item-icon" src="~@/assets/img/tabbar/home.svg" alt="" />
           <img
             slot="item-icon-active"
             src="./assets/img/tabbar/home_fill.svg"
@@ -13,7 +13,7 @@
         </tabbaritem>
       
       
-        <tabbaritem  path="/category">
+        <tabbaritem  path="/category" activeColor="red">
           <img slot="item-icon" src="./assets/img/tabbar/category.svg" alt="" />
           <img
             slot="item-icon-active"
@@ -24,7 +24,7 @@
         </tabbaritem>
       
       
-        <tabbaritem  path="/shopcart">
+        <tabbaritem  path="/shopcart" :activeColor="green">
           <img slot="item-icon" src="./assets/img/tabbar/shopcart.svg" alt="" />
           <img
             slot="item-icon-active"

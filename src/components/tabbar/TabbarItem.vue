@@ -5,7 +5,7 @@
     <!-- v-if，v-else动态绑定slot -->
     <div><slot v-if="!isActive" name="item-icon"></slot></div>
     <!-- ：class绑定文字活跃颜色 -->
-    <div :class="{ active: isActive }"><slot name="item-text"></slot></div>
+    <div :style="{color:getActiveColor}"><slot name="item-text"></slot></div>
   </div>
 </template>
 <style scoped>
@@ -28,23 +28,34 @@
 }
 </style>
 <script>
+import VueRouter from 'vue-router';
 export default {
   name: "TabbarItem",
   props:{//这儿用props，是自己属性传给自己
-    path:String
+    path:String,
+    activeColor:{
+      color: String,
+      default: "gray"
+    }
   },
-  data() {
-    return {
-      isActive: false,
-    };
+  computed:{
+    getActiveColor(){
+      if(this.$route.path==this.path){ 
+      return this.activeColor}
+      return 'black'
+    },
+    isActive(){
+      return  this.$route.path==this.path
+  }
   },
+
   methods: {
     routeTo() {
-     this.isActive=!this.isActive
-      
        if(this.$route.path!=this.path){ 
        this.$router.push(this.path)}
      },
   },
 };
+
+
 </script>

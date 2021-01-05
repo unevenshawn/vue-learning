@@ -2169,6 +2169,24 @@ this.$router.push({path: '/url',query:{name:'abc',id:123}})
    })
    ```
 
+   独享守卫一般这样
+
+   ```js
+   const router=new VueRouter({
+     routes:[
+       {
+         path:"/route",
+         component:Route,
+         beforeEnter:(to,from,next)=>{
+           
+         }
+       }
+     ]
+   })
+   ```
+
+   ​
+
 keep-alive
 
 router用于跳转，keep-alive是用于保持已经创建的组件在下次调用时直接使用缓存，用法也很简单。这一对标签将router-view包起来就行。keep-alive包含include和exclude两个属性，其值可以为字符串或正则表达式
@@ -2187,7 +2205,90 @@ router用于跳转，keep-alive是用于保持已经创建的组件在下次调�
 
 icon链接：<https://www.iconfont.cn/collections/detail?spm=a313x.7781069.1998910419.d9df05512&cid=27727>
 
+里面涉及到种种的实际使用，将之前学到的知识全部用上了，还是挺不错的，具体看代码吧。最重要的是这个具体的组件tabbaritem
 
+```html
+<template>
+  <div class="tab-bar-item" @click="routeTo">
+    <!-- 插槽包装一层div，用于定义其它属性，isActive和.active决定状态 -->
+    <div><slot v-if="isActive" name="item-icon-active"></slot></div>
+    <!-- v-if，v-else动态绑定slot -->
+    <div><slot v-if="!isActive" name="item-icon"></slot></div>
+    <!-- ：class绑定文字活跃颜色 -->
+    <div :style="{color:getActiveColor}"><slot name="item-text"></slot></div>
+  </div>
+</template>
+<style scoped>
+.tab-bar-item {
+  flex: 1;
+  text-align: center;
+  height: 49px;
+  /* tabbar常用高度49 */
+  font-size: 10px;
+}
+.tab-bar-item img {
+  height: 25px;
+  widows: 25px;
+  margin-top: 3px;
+  vertical-align: middle;
+  margin-bottom: 2px;
+}
+.active {
+  color: gray;
+}
+</style>
+<script>
+export default {
+  name: "TabbarItem",
+  props:{//这儿用props，是自己属性传给自己
+    path:String,
+    activeColor:{
+      color: String,
+      default: "gray"
+    }
+  },
+  computed:{
+    getActiveColor(){
+      if(this.$route.path==this.path){ 
+      return this.activeColor}
+      return 'black'
+    },
+    isActive(){
+      return  this.$route.path==this.path
+  }
+  },
+
+  methods: {
+    routeTo() {
+       if(this.$route.path!=this.path){ 
+       this.$router.push(this.path)}
+     },
+  },
+};
+</script>
+```
+
+有几个要注意的：
+
+1. 垂直居中布局在tabbar中定义
+
+   ```css
+   #tab-bar {
+     display: flex;
+     background-color: #f6f6f6;
+     position: fixed;
+     left: 0;
+     right: 0;
+     bottom: 0;
+     box-shadow: 0px -2px 5px rgba(100, 100, 100, 0.1);
+   }
+   ```
+
+2. 导航栏与上方的box-shadow预留出空间，是在  `margin-top: 3px;`，  `vertical-align: middle;`， ` margin-bottom: 2px;`里面定义的。
+
+3. 在Vue的路径处理配置中，@和src目录映射在了一起，也就意味着，所有写的代码在引用路径时，都可以@打头，再写次级目录，例外的是html各种标签的src中，如`\<img src="~@"\>，要在src前面加上~才能够被Vue解析。
+
+4. 如果要对Vue-cli的默认配置进行修改，那么要在项目路径下配置vue.config.js文件，通过`module.exports={}`进行设置。但需要对Vue和webpack非常熟悉，才能够改
 
 
 
