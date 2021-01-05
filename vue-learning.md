@@ -2177,8 +2177,7 @@ this.$router.push({path: '/url',query:{name:'abc',id:123}})
        {
          path:"/route",
          component:Route,
-         beforeEnter:(to,from,next)=>{
-           
+         beforeEnter:(to,from,next)=>{ 
          }
        }
      ]
@@ -2290,6 +2289,24 @@ export default {
 
 4. 如果要对Vue-cli的默认配置进行修改，那么要在项目路径下配置vue.config.js文件，通过`module.exports={}`进行设置。但需要对Vue和webpack非常熟悉，才能够改
 
+
+
+
+## Vuex
+
+vuex是什么呢，官方讲是集中式状态管理器。但实际上可以理解成为项目范围内的全局变量或者全局单例对象。
+
+Vue的全局单例，或者说js的全局变量的实现和java不太一样。一个对象的prototype是唯一的，给prototype赋予某个属性所有的其它实例都能访问到，其值是唯一的，对其修改也是。如
+
+```js
+Vue.prototype.$store=store
+```
+
+之前有学到过的this.$router等也是这个样子来储存值的
+
+### Vuex核心概念
+
+![vuex](https://vuex.vuejs.org/vuex.png)
 
 
 
@@ -2454,11 +2471,58 @@ m.forEach(function (value, key, map) {
 
 ### promise
 
+可以参考promise的帖子：<https://www.jianshu.com/p/1b63a13c2701>
+
 简单定义和理解：ES6中的一种异步解决方案
+
+对于promise，有以下理解就可以，能够帮助会写代码
+
+1. promise是一个对象，所以`let p=new Promise((resolve,reject)=>{})` （当然js中对象也是通过函数构造的，具体原理我也还不清楚），
+2. promise的构造器大概长这样，`Promise(executor(resolve,reject))`，executor是promise已经定义好的构造参数函数，executor接受resolve和reject两个函数参数，在promise对象执行时候，executor即调用它两
+3. resolve和reject，分别用于将promise对象的状态从pending变成fulfilled或rejected
+4. 调用`resolve(param)`函数，传入的参数，一般是作为promise的结果，可以传入到then()中去
+5. 一旦promise对象执行过程中抛出任何异常，都会直接跳过then，去执行catch方法
+6. 不管帖子还是视频教程中都说，promise有三个状态，pending, fulfilled, rejected，，但又会提到执行了resolve未执行完then是resolved状态，所以我觉得也可以说是有四个状态，pending, resolved, fulfilled, rejected
+7. promise有两个重要静态方法all和race
+8. Promise.all([p1, p2, p3])用于将多个promise实例，包装成一个新的Promise实例，返回的实例就是普通的promise，它接收一个数组作为参数。数组里可以是Promise对象，也可以是别的值，只有Promise会等待状态改变。当所有的子Promise都完成，该Promise完成，返回值是全部值得数组，有任何一个失败，该Promise失败，返回值是第一个失败的子Promise结果。（这儿有些像是数据库事务）
+
+实际上代码一般这样写
+
+````js
+let p1  = new Promise((resovle,reject)=>{
+  {
+    //todo,顺利执行之后获取result
+    let res;
+    //其实这儿的resolve就相当于return，
+    //但实际上promise对象中return的是new Promise以提供链式调用
+    resovle(res)
+  }
+  {
+    //todo,执行失败之后获取result
+    let res;
+    //将res返回
+    reject(res)
+  }
+
+}).then(res=>{
+  //这儿的res即是resolve函数调用时的参数res
+}).catch(err=>{
+  //这儿catch错误，只要在promise对象执行过程中出现抛出任何异常，都会直接跳过then()来这儿处理
+})
+
+let p2= new Promise(()=>{})
+
+//promise静态方法，等待所有完成后返回结果
+Promise.all([p1,p2])
+//promise静态方法，哪个先执行完就返回哪个结果，后执行完的结果直接丢弃。
+Promise.race([p1,p2])
+````
 
 
 
 ## TypeScript
+
+typescript的type指的是类型，而非打字
 
 如果使用typescript，对应打包的webpack配置就会有所差异。所以我们看看webpack怎么对typescript进行打包支持。新建一个项目， 初始化package.json，安装webpack。typescript的后缀是index.tsx
 
