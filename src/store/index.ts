@@ -4,6 +4,17 @@ import { ADP, CHANGE, ASYN } from '@/store/mutations-type'
 
 Vue.use(Vuex)
 
+
+const moduleA={
+  state: {
+
+  },
+  mutations: {},
+  actions:{},
+  getters:{}
+}
+
+
 export default new Vuex.Store({
   state: {
     //保存全局变量的值
@@ -12,7 +23,8 @@ export default new Vuex.Store({
     obj: {
       att: 'unchanged value?',
       no: 1
-    }
+    },
+    
   },
   mutations: {
     //同步操作，在这儿做，可以与devtool进行通信
@@ -38,7 +50,7 @@ export default new Vuex.Store({
         context.commit(CHANGE, text)
       }, 1000);
     },
-    [ASYN](context,url: string) {
+    [ASYN](context, url: string) {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           console.log(url, " here request is send");
@@ -47,7 +59,16 @@ export default new Vuex.Store({
       })
     }
   },
-  modules: {
-    //将store的数据按照模块进行划分
+  modules: { 
+    user:moduleA,//类型是module类型
+    order:{
+      state: {
+      //取值是通过{{$state.order.orderNumber}}
+      orderNumber:12,
+      },
+      mutations: {},
+      actions:{},
+      getters:{}
+    }
   }
 })

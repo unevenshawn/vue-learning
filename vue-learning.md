@@ -2184,7 +2184,6 @@ this.$router.push({path: '/url',query:{name:'abc',id:123}})
    })
    ```
 
-   
 
 keep-alive
 
@@ -2426,7 +2425,7 @@ change(state,payload){
 
    ```js
    import {CHANGE} from "@/store/mutations-types.ts"
-   
+
    ...
    mutations:{
        [CHANGE](state){
@@ -2440,7 +2439,7 @@ change(state,payload){
 
    ```js
    import {CHANGE}  from "@/store/mutations-types.ts"
-   
+
    this.$store.commit(CHANGE)
    ```
 
@@ -2481,7 +2480,63 @@ this.$store.dispatch(ASYN, "dispatched by actions").then((res)=>{
       });
 ```
 
+### modules
 
+就像是components中可以再套components，在这new Vue.Store中modules中也可以再嵌套定义
+
+**state**
+
+对于模块中的state，规则如下
+
+```js
+//抽取的写法
+const moduleUser={
+  state: {
+    //因为其它module里面的数据都会被integrated into主体的
+    //所以其它的地方需要用{{$state.user}}获取
+    username:12,
+    passwordHas:'a'
+  },
+  mutations: {},
+  actions:{},
+  getters:{}
+}
+//在
+new Vue.Store({
+  modules: { 
+    user:moduleUser,//类型是module类型
+    order:{
+      state: {
+      //取值是通过{{$state.order.orderNumber}}
+      orderNumber:12,
+      },
+      mutations: {},
+      actions:{},
+      getters:{}
+    }
+  }
+  })
+```
+
+**mutations**
+
+模块中的mutations并不需要类似state那样去调用模块，而是直接用，因为Vuex在查找的时候，主体里面没有，会去模块中找的。如果要引用主体state中的属性，那么在模块中的mutations中传入第三个参数rootState，这个中可获取到相应属性。
+
+**actions**
+
+模块的action，其作用域在模块内隔离，在action中，传入的context只是模块内的，但是这个context也有rooteState，rootGetters等属性
+
+### 目录结构
+
+```
+store
+|-----index.js
+|-----actions.js
+|-----mutations.js
+|-----modules
+	  |-----moduleA.js
+      |-----moduleB.js
+```
 
 
 
