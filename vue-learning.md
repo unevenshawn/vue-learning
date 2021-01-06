@@ -2184,7 +2184,7 @@ this.$router.push({path: '/url',query:{name:'abc',id:123}})
    })
    ```
 
-   ​
+   
 
 keep-alive
 
@@ -2307,6 +2307,180 @@ Vue.prototype.$store=store
 ### Vuex核心概念
 
 ![vuex](https://vuex.vuejs.org/vuex.png)
+
+对于上图，有以下说明：
+
+1. state用于保存全局变量的
+2. actions和mutations是对state进行修改的函数，actions是异步的，mutations是异步的
+3. 调用mutations进行异步操作的，主要是为了保证devtool能够监听到修改
+4. 除此之外，还有module和getters，getters专门用于返回数据，module是为了对全局变量按照模块进行划分
+
+### mutations
+
+**mutations中函数参数**
+
+需要注意`mutations`中函数传入的参数是state，所以应该调用state的属性去获取值
+
+```js
+import Vue from 'vue'
+import Vuex from 'vuex'
+
+Vue.use(Vuex)
+
+export default new Vuex.Store({
+  state: {
+    //保存全局变量的值
+     nomber:123
+    //其它地方通过$store.state.nomber取值
+  },
+  mutations: {
+    //同步操作，在这儿做，可以与devtool进行通信，异步操作不能写在这儿
+   modnomber(state){
+      //在Vue的管理下，上面state中的nomber的数值，能够直接传入到这儿
+       return state.nomber++;
+    }
+  },
+  actions: {
+    //如果有异步操作，在这儿写，一般与后端进行交互
+  },
+  modules: { 
+    //将store的数据按照模块进行划分
+  },
+  getters:{
+      //这儿纯粹写只读属性
+  }
+})
+```
+
+其它地方调用`mutations`的方法如下
+
+```js
+ methods: {
+    ok() {
+      this.$store.commit("mold",payload//如果mutation中函数有参数，那么在这儿传入);
+    },
+```
+
+**mutations调用时参数**
+
+关于上面`this.$store.commit()`中的参数，有如下说明：
+
+1. 携带的额外参数被称为payload
+2. 如果参数不止一个，那么在mutations中则传入payload对象，例如`{name:'xx',nomber:123}`，调用时通过`payload.a`或`payload.b`调用
+
+在以上说明基础上，可以说明，在Vue中还有另一种方式的提交，
+
+```js
+this.$store.commit({
+	type:"mold",
+	nomber:896768
+})
+```
+
+在mutations中，提取
+
+```js
+change(state,payload){
+	state.nomber=payload.nomber
+}
+```
+
+**mutations响应式规则**
+
+在数据发生变化，要调用mutations时候，尤其需要注意发生的变化是否为Object，如果是一个对象中某个属性发生变化，必须通过响应式方式来写代码，有下面两种方式：
+
+1. Vue.set和Vue.delete
+
+   ```js
+   mutations:{
+       change(state,payload){
+       Vue.set(state.obj,'attrName',newVal)//以这种方式取代state.obj['attrName']=newVal
+       Vue.delete(state.obj,'attrName')//如果删除，用这种方式
+       }
+   }
+   ```
+
+2. 用新对象直接覆盖旧对象
+
+   ```js
+   mutations:{
+       change(state,payload){
+           state.obj.att = payload.text;
+       }
+   }
+   ```
+
+反正说起来，就像是在数组中不能用[index]修改v-bind的内容一样，这儿也不能通过['att']获取属性并修改。
+
+**mutations类型常量**
+
+这个主要为了防止this.$store.commit中将mutations中的属性值写错。步骤有三
+
+1. /store/mutations-types.ts中
+
+   ```js
+   export const CHANGE='change'
+   ```
+
+2. 在/store/index.ts的mutations中这么写
+
+   ```js
+   import {CHANGE} from "@/store/mutations-types.ts"
+   
+   ...
+   mutations:{
+       [CHANGE](state){
+           //todo code
+       }
+   }
+   ...
+   ```
+
+3. 在别处引用
+
+   ```js
+   import {CHANGE}  from "@/store/mutations-types.ts"
+   
+   this.$store.commit(CHANGE)
+   ```
+
+### actions
+
+如果有异步操作，需要通过actions来操作，mutations进行的异步操作无法记录在devtool中
+
+```js
+actions:{
+    actionDipatcher(context){//这儿的context即是$store了
+    context.commit(CHANGE)
+    }
+}
+```
+
+调用的代码是
+
+```js
+this.$store.dispatch('actionDipatcher',"dispatched by actions")//这儿的名称应该是actions中定义的名称
+```
+
+非常有意思，在actions中也可以用promise来实现请求和数据处理的分离
+
+```js
+//因为返回了promise对象，所以可以在调用时直接调用then()
+[ASYN](context,url: string) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          console.log(url, " here request is send");
+          resolve('this is result')
+        }, 1000)
+      })
+    }
+//这儿调用then
+this.$store.dispatch(ASYN, "dispatched by actions").then((res)=>{
+        console.log("here request has been processed and data returned, here is for data post handle");
+        console.log(res);
+      });
+```
+
 
 
 

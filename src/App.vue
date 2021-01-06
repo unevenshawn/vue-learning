@@ -1,78 +1,44 @@
 <template>
   <div id="app">
+    <main-tb></main-tb>
     <router-view></router-view>
-    <tabbar>
-        <tabbaritem path="/home">
-          <img slot="item-icon" src="~@/assets/img/tabbar/home.svg" alt="" />
-          <img
-            slot="item-icon-active"
-            src="./assets/img/tabbar/home_fill.svg"
-            alt=""
-          />
-          <div slot="item-text">首页</div>
-        </tabbaritem>
-      
-      
-        <tabbaritem  path="/category" activeColor="red">
-          <img slot="item-icon" src="./assets/img/tabbar/category.svg" alt="" />
-          <img
-            slot="item-icon-active"
-            src="./assets/img/tabbar/category_fill.svg"
-            alt=""
-          />
-          <div slot="item-text">分类</div>
-        </tabbaritem>
-      
-      
-        <tabbaritem  path="/shopcart" :activeColor="green">
-          <img slot="item-icon" src="./assets/img/tabbar/shopcart.svg" alt="" />
-          <img
-            slot="item-icon-active"
-            src="./assets/img/tabbar/shopcart_fill.svg"
-            alt=""
-          />
-          <div slot="item-text">购物车</div>
-        </tabbaritem>
-      
-      
-        <tabbaritem  path="/user">
-          <img slot="item-icon" src="./assets/img/tabbar/user.svg" alt="" />
-          <img
-            slot="item-icon-active"
-            src="./assets/img/tabbar/user_fill.svg"
-            alt=""
-          />
-          <div slot="item-text">用户</div>
-        </tabbaritem>
-      
-    </tabbar>
+    <div>{{ $store.state.obj }}</div>
+    <div @click="ok()">click and see next line</div>
+    <div>{{ $store.state.obj.att }}</div>
   </div>
 </template>
 
 <style>
-button {
+#app {
   border: none;
   flex: 1;
   text-align: center;
   height: 49px;
   /* tabbar常用高度49 */
-  font-size: 10px;
+  font-size: 25px;
+}
+.test {
+  color: peachpuff;
 }
 </style>
 <script>
-import Tabbar from "./components/tabbar/Tabbar.vue";
-import Tabbaritem from "./components/tabbar/TabbarItem.vue";
-
+import MainTb from "@/components/tabbar/MainTb.vue";
+import { ADP, CHANGE, ASYN } from "@/store/mutations-type";
 
 export default {
   name: "App",
   components: {
-    Tabbar,
-    Tabbaritem,
+    MainTb,
   },
   methods: {
-   
-
+    ok() {
+      this.$store.commit(CHANGE, "mutated by mutations");
+      this.$store.dispatch(ADP, "dispatched by actions");
+      this.$store.dispatch(ASYN, "dispatched by actions").then((res)=>{
+        console.log("here request has been processed and data returned, here is for data post handle");
+        console.log(res);
+      });
+    },
   },
 };
 </script>

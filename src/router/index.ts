@@ -41,7 +41,7 @@ const router = new VueRouter({
 
 router.beforeEach((to,from,next)=>{
   //如何获取到路由对应的组件？
-  console.log(router);
+  // console.log(router);
   
   next()
 })

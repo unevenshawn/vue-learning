@@ -28,13 +28,17 @@
 }
 </style>
 <script>
+
 import VueRouter from 'vue-router';
+import Vue from 'vue'
+
+Vue.use(VueRouter)
 export default {
   name: "TabbarItem",
   props:{//这儿用props，是自己属性传给自己
     path:String,
     activeColor:{
-      color: String,
+      color:String,
       default: "gray"
     }
   },
