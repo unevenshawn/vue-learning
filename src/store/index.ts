@@ -51,6 +51,7 @@ export default new Vuex.Store({
       }, 1000);
     },
     [ASYN](context, url: string) {
+       // eslint-disable-next-line
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           console.log(url, " here request is send");

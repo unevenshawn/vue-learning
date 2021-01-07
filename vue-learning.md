@@ -55,6 +55,33 @@ plugin：需要的插件
 mode：分开发环境和生产环境
 
 
+加不加--save, -g, -dev的区别
+**npm install moduleName 命令**
+
+ 安装模块到项目node_modules目录下。
+ 不会将模块依赖写入devDependencies或dependencies 节点。
+ 运行 npm install 初始化项目时不会下载模块。
+
+**npm install -g moduleName 命令**
+ 安装模块到全局，不会在项目node_modules目录中保存模块包。
+ 不会将模块依赖写入devDependencies或dependencies 节点。
+ 运行 npm install 初始化项目时不会下载模块。
+
+**npm install -save moduleName 命令**
+ 安装模块到项目node_modules目录下。
+ 会将模块依赖写入dependencies 节点。
+ 运行 npm install 初始化项目时，会将模块下载到项目目录下。
+ 运行npm install --production或者注明NODE_ENV变量值为production时，会自动下载模块到node_modules目录中。
+
+**npm install -save-dev moduleName 命令**
+ 安装模块到项目node_modules目录下。
+ 会将模块依赖写入devDependencies 节点。
+ 运行 npm install 初始化项目时，会将模块下载到项目目录下。
+ 运行npm install --production或者注明NODE_ENV变量值为production时，不会自动下载模块到node_modules目录中。
+
+
+
+
 
 ## Vue语法
 
@@ -2537,6 +2564,18 @@ store
 	  |-----moduleA.js
       |-----moduleB.js
 ```
+
+
+
+
+
+## AXIOS
+
+测试用接口(截止2021.1.7还有效)：`http://123.207.32.32:8000/home/multidata`
+
+
+
+
 
 
 
